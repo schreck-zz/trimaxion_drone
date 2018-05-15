@@ -12,23 +12,23 @@ public class CubeField : MonoBehaviour {
 	void Start () {
         Transform foo;
         float mid = spacing * w / 2;
-		for(int i = 0; i < w; i++)
+        for (int i = 0; i < w; i++)
         {
             for(int j = 0; j < w; j++)
             {
                 for (int k = 0; k < w; k++)
                 {
                     foo = Instantiate(prefabelement, transform.parent);
-                    foo.position = new Vector3(spacing * i - mid, spacing * j - mid, spacing * k - mid);
+                    foo.position = new Vector3(Random.Range(-spacing/3,spacing/3)+spacing * i - mid, Random.Range(-spacing / 3, spacing / 3) + spacing * j - mid, Random.Range(-spacing / 3, spacing / 3) + spacing * k - mid);
                     foo.rotation = Random.rotation;
                     foo.localScale = Random.Range(.7f, spacing / 10)*Vector3.one;
                 }
             }
         }
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 }
