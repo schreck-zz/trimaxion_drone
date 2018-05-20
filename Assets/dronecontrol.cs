@@ -71,10 +71,7 @@ public class dronecontrol : MonoBehaviour {
         starboard_rig.localPosition = starboard_zero + left_throttle_position;
 
         var w = starboard_zero.x - port_zero.x;
-        var phi = Mathf.Atan((right_throttle_position.z - left_throttle_position.z) / w);
-        var theta = Mathf.PI / 2 - phi;
-        var r = left_throttle_position.z * Mathf.Cos(phi) + w * Mathf.Sin(phi) / 2;
-        var combined_xlate_throttle = new Vector3(Mathf.Cos(theta) * r, 0f, Mathf.Sin(phi) * r);
+        var combined_xlate_throttle = right_throttle_position + left_throttle_position;
         v += (thrust / mass) * combined_xlate_throttle * Time.deltaTime;
         transform.position += v * Time.deltaTime;
     }
