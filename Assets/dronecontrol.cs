@@ -71,8 +71,12 @@ public class dronecontrol : MonoBehaviour {
         starboard_rig.localPosition = starboard_zero + left_throttle_position;
 
         var w = starboard_zero.x - port_zero.x;
+        var yaw = Mathf.Atan((right_throttle_position.z - left_throttle_position.z) / w);
+        var roll = Mathf.Atan((right_throttle_position.y - left_throttle_position.y) / w);
+        var rot = Quaternion.AngleAxis(yaw, Vector3.up) * Quaternion.AngleAxis(roll, Vector3.forward);
         var combined_xlate_throttle = right_throttle_position + left_throttle_position;
         v += (thrust / mass) * combined_xlate_throttle * Time.deltaTime;
         transform.position += v * Time.deltaTime;
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, rot*transform.rotation, .02f);
     }
 }
