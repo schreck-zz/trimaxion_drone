@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class dronecontrol : MonoBehaviour {
 
-    private Vector3 v; // velocity (m/s)
+    private float thrust; // thruster strength (newtons)
+    private float mass; // drone mass (kg)
+
+    public Vector3 v; // velocity (m/s)
     private Vector3 left_throttle_position; // xlate
     private Vector3 right_throttle_position; // xlate
 
@@ -20,11 +23,12 @@ public class dronecontrol : MonoBehaviour {
         port_zero = port_rig.position;
         starboard_rig = transform.Find("starboard rig").gameObject.transform;
         starboard_zero = starboard_rig.position;
+        thrust = 1000f; // 1 mega newton
+        mass = 100f;
     }
 
     void FixedUpdate()
     {
-
     }
 	
 	// Update is called once per frame
@@ -63,7 +67,15 @@ public class dronecontrol : MonoBehaviour {
         {
             right_throttle_position += new Vector3(.5f, 0f, 0f);
         }
-        port_rig.position = port_zero + right_throttle_position;
-        starboard_rig.position = starboard_zero + left_throttle_position;
-	}
+        port_rig.localPosition = port_zero + right_throttle_position;
+        starboard_rig.localPosition = starboard_zero + left_throttle_position;
+
+        var w = starboard_zero.x - port_zero.x;
+        var phi = Mathf.Atan((right_throttle_position.z - left_throttle_position.z) / w);
+        var theta = Mathf.PI / 2 - phi;
+        var r = left_throttle_position.z * Mathf.Cos(phi) + w * Mathf.Sin(phi) / 2;
+        var combined_xlate_throttle = new Vector3(Mathf.Cos(theta) * r, 0f, Mathf.Sin(phi) * r);
+        v += (thrust / mass) * combined_xlate_throttle * Time.deltaTime;
+        transform.position += v * Time.deltaTime;
+    }
 }
